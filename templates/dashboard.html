@@ -2,8 +2,6 @@
 
 {% block title %}Dashboard{% endblock %}
 
-{% block dashativo %}active{% endblock %}
-
 {% block titulo_header %}Dashboard{% endblock %}
 
 {% block main %}
@@ -34,8 +32,9 @@
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text text-muted">{{ product.description }}</p>
+                            <h5 class="card-title">{{ product.nome }}</h5>
+                            <p class="card-text text-muted">{{ product.descricao }}</p>
+                            <p class="card-text text-muted">{{ product.preco}}</p>
                             <div class="d-flex justify-content-between mt-3">
                                 <!-- Botões de ação para os produtos do usuário -->
                                 <a href="{{ url_for('editar_produto', product_id=product.id) }}" class="btn btn-warning btn-sm">Editar</a>
@@ -65,6 +64,10 @@
                 <div class="mb-3">
                     <label for="product_description" class="form-label">Descrição</label>
                     <textarea class="form-control" id="product_description" name="description" rows="3" required></textarea>
+                </div>
+                <div class="mb3">
+                    <label for="product_price" class="form-label">Preço do produto/condição de troca</label>
+                    <input type="text" class="form-control" id="product_price" name="preco" required>
                 </div>
                 <button type="submit" class="btn btn-success">Adicionar Produto</button>
             </form>

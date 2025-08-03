@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{{ super() }}
+<style>
+    *{
+        box-sizing: border-box;
+        margin: 0;
+    }
+    main{
+        margin-top:4em;
+    }
+    form{
+        z-index: 1;
+        color: black;
+    }
+    .card{
+        margin: 1em 0;
+        width: fit-content;
+    }
+    #centraliza{
+        margin: 0 0 1em;
+        display: flex;
+        justify-content: center;
+    }
+    #form{
+        width: 35em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-flow: column nowrap;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Editar{% endblock %}
+
+{% block titulo_header %}Editar produto{% endblock titulo_header %}
+
+{% block main %}
+<div id="centraliza">
+    <div class="card">
+    <div class="card-header">
+        Produto a editar
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Nome: {{ produto.nome }}</h5>
+        <p class="card-text">Descrição: {{ produto.descricao }}</p>
+        <p class="card-text">Preço/Condição: {{ produto.preco }}</p>
+    </div>
+    </div>
+</div>
+<div id="centraliza">
+    <div id="form">
+        <h3 class="">Editar produto</h3>
+        <form action="{{ url_for('editar_produto') }}" method="POST">
+            <input type="hidden" name="id" id="id" value="{{ produto.id }}">
+            <div class="mb-3">
+                <label for="product_name" class="form-label">Nome do Produto</label>
+                <input type="text" class="form-control" id="product_name" name="name">
+            </div>
+            <div class="mb-3">
+                <label for="product_description" class="form-label">Descrição</label>
+                <textarea class="form-control" id="product_description" name="description" rows="3"></textarea>
+            </div>
+            <div class="mb3">
+                <label for="product_price" class="form-label">Preço do produto/condição de troca</label>
+                <input type="text" class="form-control" id="product_price" name="preco">
+            </div>
+            <button type="submit" class="btn btn-success">Aplicar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
