@@ -32,3 +32,6 @@ def cadastro():
 @app.route('/produtos')
 def produtos_page():
     return "Nada ainda"
+
+if __name__ == "__main__":
+    app.run(debug=True)
