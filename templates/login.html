@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .form-group {
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+    .btn {
+        margin-top: 10px;
+    }
+</style>
+{% endblock head %}
+
+{% block titulo_header %}Login{% endblock titulo_header %}
+
+{% block main %}
+    <h2>Faça Login</h2>
+    <form method="POST" action="{{url_for('login')}}">
+        <div class="form-group">
+            <label for="nome_usuario">Nome de Usuário:</label>
+            <input type="text" name="nome_usuario" id="nome_usuario" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="senha_usuario">Senha:</label>
+            <input type="password" class="form-control" id="senha_usuario" name="senha_usuario" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+    <p>Não tem uma conta? <a href="{{url_for('cadastro')}}">Cadastre-se aqui</a>.</p>
+{% endblock main %}

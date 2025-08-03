@@ -8,6 +8,19 @@
 {% block head %}
 {{ super() }}
 <style>
+        .container {
+        margin-top: 20px;
+    }
+    h1 {
+        margin-bottom: 20px;
+    }
+    p {
+        font-size: 16px;
+    }
+    .btn {
+        margin-right: 10px;
+    }
+
 
 </style>
 
@@ -16,5 +29,11 @@
 {% block titulo_header %}Início{% endblock titulo_header %}
 
 {% block main %}
- UEPA
+    <div class="container">
+    <h1> Bem-vindo ao nosso site!</h1>
+    <p>Site de E-Cormece para o projeto 2 de Romero.</p>
+    <p>Você pode navegar pelas seguintes seções:</p>
+    <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+    <a href="{{ url_for('cadastro') }}" class="btn btn-secondary">Cadastro</a>
+    </div>
 {% endblock main%}
