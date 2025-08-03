@@ -1,12 +1,9 @@
 feature:
   - "app/**"
   - "templates/**"
-
 bug:
   - "tests/**"
-
 frontend:
   - "static/**"
-
 infra:
   - ".github/**"
