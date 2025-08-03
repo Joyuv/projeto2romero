@@ -6,7 +6,7 @@ Descreva as mudanças que este PR faz.
 
 - [ ] Código testado localmente
 - [ ] Documentação atualizada
-- [ ] Está relacionado com alguma issue? Referência: #ISSUE_ID
+- [ ] Está relacionado com alguma issue? closes #ISSUE_ID
 
 ### Screenshots (se aplicável)
 
