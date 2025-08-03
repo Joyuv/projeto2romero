@@ -193,7 +193,7 @@ def editar_produto():
         id = request.args.get('product_id')
         conn = get_db_conexao()
         user_products = conn.execute(
-            "SELECT * FROM produtos WHERE usuario_id = ?", (current_user.id,)
+            "SELECT * FROM produtos WHERE id = ?", (id,)
         ).fetchone()
         conn.close()
         return render_template('editar.html', id=id, produto=user_products)
