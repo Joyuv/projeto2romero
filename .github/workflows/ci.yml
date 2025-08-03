@@ -19,25 +19,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Cairo dependencies
+      - name: Install linux dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y libcairo2-dev
-
-      - name: Install System Dependencies
-
-        on:
-          workflow_dispatch:
-
-        jobs:
-          setup:
-            runs-on: ubuntu-latest
-            steps:
-              - name: Update apt
-                run: sudo apt update
-
-              - name: Install gobject-introspection and development headers
-                run: sudo apt install -y gobject-introspection libgirepository1.0-dev
-
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
+          sudo apt install -y gobject-introspection libgirepository1.0-dev
+          
       - name: 📦 Instalar dependências
         run: |
           python -m pip install --upgrade pip
