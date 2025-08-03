@@ -1,17 +1,17 @@
 from flask_login import UserMixin
-usuarios = {}
-
+from iniciar import get_db_conexao
 class User(UserMixin):
-    email: str
-    def __init__(self, email, nome, senha):
-        self.id = email
-        self.nome = nome
+    def __init__(self, id, nome_usuario, senha):
+        self.id = id
+        self.nome_usuario = nome_usuario
         self.senha = senha
 
     @classmethod
-    def get(cls, user_id, usuarios):
-        if user_id in usuarios.keys():
-            nome, senha = usuarios[user_id]
-
-            return cls(user_id, nome, senha)
+    def get(cls, user_id):
+        conn = get_db_conexao()
+        user_data = conn.execute('SELECT nome_usuario, senha FROM usuarios WHERE nome_usuario = ?', (user_id,)).fetchone()
+        conn.close()
+        if user_data:
+            return cls(user_data['nome_usuario'], user_data['senha'])
         return None
+

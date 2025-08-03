@@ -1,17 +1,94 @@
 {% extends "base.html" %}
 
-{%block title%}Início{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
-{% block head %}
-{{ super() }}
-<style>
+{% block dashativo %}active{% endblock %}
 
-</style>
-
-{% endblock head %}
-
-{% block titulo_header %}Dashboard{% endblock titulo_header %}
+{% block titulo_header %}Dashboard{% endblock %}
 
 {% block main %}
- Dashboard
-{% endblock main%}
+<div class="container mt-5 pt-5">
+    <h1 class="mb-4">Olá, {{ current_user.username }}!</h1>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="meus-produtos-tab" data-bs-toggle="tab" data-bs-target="#meus-produtos" type="button" role="tab" aria-controls="meus-produtos" aria-selected="true">Meus Produtos</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cadastrar-tab" data-bs-toggle="tab" data-bs-target="#cadastrar" type="button" role="tab" aria-controls="cadastrar" aria-selected="false">Cadastrar Produto</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="minhas-trocas-tab" data-bs-toggle="tab" data-bs-target="#minhas-trocas" type="button" role="tab" aria-controls="minhas-trocas" aria-selected="false">Minhas Trocas</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="notificacoes-tab" data-bs-toggle="tab" data-bs-target="#notificacoes" type="button" role="tab" aria-controls="notificacoes" aria-selected="false">Notificações</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <!-- Tab de Meus Produtos -->
+        <div class="tab-pane fade show active" id="meus-produtos" role="tabpanel" aria-labelledby="meus-produtos-tab">
+            <h3 class="mt-4 mb-3">Meus Produtos Anunciados</h3>
+            {% if user_products %}
+            <div class="row">
+                {% for product in user_products %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-muted">{{ product.description }}</p>
+                            <div class="d-flex justify-content-between mt-3">
+                                <!-- Botões de ação para os produtos do usuário -->
+                                <a href="{{ url_for('editar_produto', product_id=product.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{{ url_for('remover_produto', product_id=product.id) }}" class="btn btn-danger btn-sm">Remover</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info mt-3" role="alert">
+                Você ainda não tem produtos cadastrados.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab de Cadastrar Produto -->
+        <div class="tab-pane fade" id="cadastrar" role="tabpanel" aria-labelledby="cadastrar-tab">
+            <h3 class="mt-4 mb-3">Cadastrar Novo Produto</h3>
+            <!-- Formulário para o usuário adicionar um novo produto -->
+            <form action="{{ url_for('adicionar_produto') }}" method="POST">
+                <div class="mb-3">
+                    <label for="product_name" class="form-label">Nome do Produto</label>
+                    <input type="text" class="form-control" id="product_name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="product_description" class="form-label">Descrição</label>
+                    <textarea class="form-control" id="product_description" name="description" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Adicionar Produto</button>
+            </form>
+        </div>
+
+        <!-- Tab de Minhas Trocas -->
+        <div class="tab-pane fade" id="minhas-trocas" role="tabpanel" aria-labelledby="minhas-trocas-tab">
+            <h3 class="mt-4 mb-3">Histórico de Trocas</h3>
+            <!-- Placeholder para a lista de trocas -->
+            <div class="alert alert-warning mt-3" role="alert">
+                Ainda não há trocas para exibir. Em breve você verá suas ofertas feitas e recebidas aqui.
+            </div>
+        </div>
+        
+        <!-- Tab de Notificações -->
+        <div class="tab-pane fade" id="notificacoes" role="tabpanel" aria-labelledby="notificacoes-tab">
+            <h3 class="mt-4 mb-3">Suas Notificações</h3>
+            <!-- Placeholder para a lista de notificações -->
+            <div class="alert alert-info mt-3" role="alert">
+                Você não tem novas notificações.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+{% endblock main %}
