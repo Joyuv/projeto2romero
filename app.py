@@ -5,7 +5,6 @@ from models import User, get_db_conexao
 import os
 
 
-
 app = Flask(__name__)
 
 login_manager = LoginManager()
@@ -52,17 +51,17 @@ def dashboard():
 def adicionar_produto():
     name = request.form.get("name")
     description = request.form.get("description")
-    preco = request.form.get('preco')
+    preco = request.form.get("preco")
     user_id = current_user.id
     print(user_id)
     conn = get_db_conexao()
-    try: 
+    try:
         conn.execute(
             "INSERT INTO produtos(usuario_id, nome, descricao, preco) VALUES (?, ?, ?, ?)",
-            (user_id, name, description, preco)
+            (user_id, name, description, preco),
         )
     except:
-        print('Erro ao adicionar')
+        print("Erro ao adicionar")
     conn.commit()
     conn.close()
     flash("Produto adicionado com sucesso!", "success")
@@ -77,11 +76,10 @@ def login():
     if request.method == "POST":
         nome_usuario = request.form.get("nome_usuario")
         senha_usuario = request.form.get("senha_usuario")
-        print(f'{nome_usuario}, {senha_usuario}')
+        print(f"{nome_usuario}, {senha_usuario}")
         conn = get_db_conexao()
         user_data = conn.execute(
-            "SELECT * FROM usuarios WHERE nome_usuario = ?",
-            (nome_usuario,)
+            "SELECT * FROM usuarios WHERE nome_usuario = ?", (nome_usuario,)
         ).fetchone()
         conn.close()
 
@@ -95,7 +93,7 @@ def login():
             # reedirecionamento para o dashboard
             return redirect(url_for("dashboard"))
         else:
-            print('erro')
+            print("erro")
             flash("Nome de usuário ou senha incorretos", "error")
 
     return render_template("login.html")
@@ -137,7 +135,7 @@ def logout():
         flash("Logout realizado com sucesso", "success")
         return redirect(url_for("index"))
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
 
 
 @app.route("/produtos")
@@ -167,50 +165,52 @@ def produtos_populares():
 
     return render_template("produtos.html")
 
-@app.route('/produtos/editar', methods=["POST", "GET"])
+
+@app.route("/produtos/editar", methods=["POST", "GET"])
 @login_required
 def editar_produto():
     if request.method == "POST":
-        nome = request.form.get('name')
-        descricao = request.form.get('description')
-        preco = request.form.get('preco')
-        id = request.form.get('id')
+        nome = request.form.get("name")
+        descricao = request.form.get("description")
+        preco = request.form.get("preco")
+        id = request.form.get("id")
 
         print(nome, descricao, preco, id)
 
         conn = get_db_conexao()
         cursor = conn.cursor()
         if nome:
-            cursor.execute('UPDATE produtos SET nome = ? WHERE id = ?', (nome, id))
+            cursor.execute("UPDATE produtos SET nome = ? WHERE id = ?", (nome, id))
         if preco:
-            cursor.execute('UPDATE produtos SET preco = ? WHERE id = ?', (preco, id))
+            cursor.execute("UPDATE produtos SET preco = ? WHERE id = ?", (preco, id))
         if descricao:
-            cursor.execute('UPDATE produtos SET descricao = ? WHERE id = ?', (descricao, id))
+            cursor.execute(
+                "UPDATE produtos SET descricao = ? WHERE id = ?", (descricao, id)
+            )
         conn.commit()
         conn.close()
-        return redirect(url_for('dashboard'))
+        return redirect(url_for("dashboard"))
     else:
-        id = request.args.get('product_id')
+        id = request.args.get("product_id")
         conn = get_db_conexao()
         user_products = conn.execute(
             "SELECT * FROM produtos WHERE id = ?", (id,)
         ).fetchone()
         conn.close()
-        return render_template('editar.html', id=id, produto=user_products)
+        return render_template("editar.html", id=id, produto=user_products)
 
-@app.route('/produtos/remover')
+
+@app.route("/produtos/remover")
 @login_required
 def remover_produto():
-    produto_id = request.args.get('product_id')
+    produto_id = request.args.get("product_id")
 
     conn = get_db_conexao()
-    conn.execute(
-        'DELETE FROM produtos WHERE id = ?',
-        (produto_id,)
-    )
+    conn.execute("DELETE FROM produtos WHERE id = ?", (produto_id,))
     conn.commit()
     conn.close()
-    return redirect(url_for('dashboard'))
+    return redirect(url_for("dashboard"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
