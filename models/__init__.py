@@ -1,8 +1,11 @@
 from flask_login import UserMixin
+
 usuarios = {}
+
 
 class User(UserMixin):
     email: str
+
     def __init__(self, email, nome, senha):
         self.id = email
         self.nome = nome
