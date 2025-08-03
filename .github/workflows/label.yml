@@ -10,4 +10,6 @@ jobs:
     steps:
       - uses: actions/labeler@v5
         with:
+          sync-labels: false
+          dot: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}
