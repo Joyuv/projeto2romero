@@ -1,9 +1,17 @@
 feature:
-  - "app/**"
-  - "templates/**"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "app.py"
+      - "templates/**"
 bug:
-  - "tests/**"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "tests/**"
 frontend:
-  - "static/**"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "static/**"
 infra:
-  - ".github/**"
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".github/**"
