@@ -33,3 +33,7 @@ jobs:
         run: |
           pip install pytest
           pytest
+      - name: 🔍 Verificar formatação com Black
+        run: |
+          pip install black
+          black . --check --diff
