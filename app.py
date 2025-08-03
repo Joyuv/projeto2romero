@@ -2,8 +2,8 @@ from flask import *
 from flask_login import *
 from werkzeug.security import check_password_hash, generate_password_hash
 from models import User, get_db_conexao
-from iniciar import init_db
 import os
+
 
 app = Flask(__name__)
 
@@ -46,18 +46,22 @@ def dashboard():
     return render_template("dashboard.html", user_products=user_products)
 
 
-@app.route("/adicionar_produto", methods=["POST"])
+@app.route("/produtos/adicionar", methods=["POST"])
 @login_required
 def adicionar_produto():
     name = request.form.get("name")
     description = request.form.get("description")
+    preco = request.form.get("preco")
     user_id = current_user.id
-
+    print(user_id)
     conn = get_db_conexao()
-    conn.execute(
-        "INSERT INTO products (user_id, name, description) VALUES (?, ?, ?)",
-        (user_id, name, description),
-    )
+    try:
+        conn.execute(
+            "INSERT INTO produtos(usuario_id, nome, descricao, preco) VALUES (?, ?, ?, ?)",
+            (user_id, name, description, preco),
+        )
+    except:
+        print("Erro ao adicionar")
     conn.commit()
     conn.close()
     flash("Produto adicionado com sucesso!", "success")
@@ -70,16 +74,16 @@ def login():
         return redirect(url_for("dashboard"))
 
     if request.method == "POST":
-        nome_usuario = request.form["nome_usuario"]
-        senha_usuario = request.form["senha_usuario"]
-
+        nome_usuario = request.form.get("nome_usuario")
+        senha_usuario = request.form.get("senha_usuario")
+        print(f"{nome_usuario}, {senha_usuario}")
         conn = get_db_conexao()
         user_data = conn.execute(
-            "SELECT nome_usuario, senha FROM usuarios WHERE nome_usuario = ?",
-            (nome_usuario,),
+            "SELECT * FROM usuarios WHERE nome_usuario = ?", (nome_usuario,)
         ).fetchone()
         conn.close()
 
+        print(user_data)
         if user_data and check_password_hash(user_data["senha"], senha_usuario):
             user = User(
                 user_data["nome_usuario"], user_data["nome_usuario"], user_data["senha"]
@@ -87,9 +91,9 @@ def login():
             login_user(user)
             flash("Login realizado com sucesso", "success")
             # reedirecionamento para o dashboard
-            prox_pag = request.args.get("next")
-            return redirect(prox_pag or url_for("dashboard"))
+            return redirect(url_for("dashboard"))
         else:
+            print("erro")
             flash("Nome de usuário ou senha incorretos", "error")
 
     return render_template("login.html")
@@ -103,7 +107,7 @@ def cadastro():
 
         if not nome_usuario or not senha_usuario:
             flash("Preencha todos os campos", "error")
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("cadastro"))
 
         senha_hash = generate_password_hash(senha_usuario)
         conn = get_db_conexao()
@@ -125,11 +129,13 @@ def cadastro():
 
 
 @app.route("/logout")
-@login_required
 def logout():
-    logout_user()
-    flash("Logout realizado com sucesso", "success")
-    return redirect(url_for("index"))
+    if current_user.is_authenticated:
+        logout_user()
+        flash("Logout realizado com sucesso", "success")
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("index"))
 
 
 @app.route("/produtos")
@@ -160,6 +166,51 @@ def produtos_populares():
     return render_template("produtos.html")
 
 
+@app.route("/produtos/editar", methods=["POST", "GET"])
+@login_required
+def editar_produto():
+    if request.method == "POST":
+        nome = request.form.get("name")
+        descricao = request.form.get("description")
+        preco = request.form.get("preco")
+        id = request.form.get("id")
+
+        print(nome, descricao, preco, id)
+
+        conn = get_db_conexao()
+        cursor = conn.cursor()
+        if nome:
+            cursor.execute("UPDATE produtos SET nome = ? WHERE id = ?", (nome, id))
+        if preco:
+            cursor.execute("UPDATE produtos SET preco = ? WHERE id = ?", (preco, id))
+        if descricao:
+            cursor.execute(
+                "UPDATE produtos SET descricao = ? WHERE id = ?", (descricao, id)
+            )
+        conn.commit()
+        conn.close()
+        return redirect(url_for("dashboard"))
+    else:
+        id = request.args.get("product_id")
+        conn = get_db_conexao()
+        user_products = conn.execute(
+            "SELECT * FROM produtos WHERE id = ?", (id,)
+        ).fetchone()
+        conn.close()
+        return render_template("editar.html", id=id, produto=user_products)
+
+
+@app.route("/produtos/remover")
+@login_required
+def remover_produto():
+    produto_id = request.args.get("product_id")
+
+    conn = get_db_conexao()
+    conn.execute("DELETE FROM produtos WHERE id = ?", (produto_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for("dashboard"))
+
+
 if __name__ == "__main__":
-    init_db(app)
     app.run(debug=True)
