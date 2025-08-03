@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from iniciar import get_db_conexao
+
 class User(UserMixin):
     def __init__(self, id, nome_usuario, senha):
         self.id = id
@@ -14,4 +15,3 @@ class User(UserMixin):
         if user_data:
             return cls(user_data['nome_usuario'], user_data['senha'])
         return None
-

@@ -7,10 +7,11 @@ import os
 
 app = Flask(__name__)
 
-login_manager = LoginManager() 
-app.secret_key = 'guilherme'
+login_manager = LoginManager()
+app.secret_key = "guilherme"
 login_manager.init_app(app)
 login_manager.login_view = 'index'
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -23,9 +24,10 @@ def load_user(user_id):
 
 # -- Rotas da aplicação --
 
-@app.route('/', methods=['GET'])
+
+@app.route("/", methods=["GET"])
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 @app.route('/dashboard', methods=['GET'])
 @login_required
@@ -107,7 +109,8 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/produtos')
+
+@app.route("/produtos")
 def produtos_page():
     conn = get_db_conexao()
     produtos = conn.execute('SELECT * FROM produtos').fetchall()
