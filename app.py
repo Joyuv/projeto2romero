@@ -137,6 +137,7 @@ def logout():
     else:
         return redirect(url_for("index"))
 
+
 def produtos_populares():
     conn = get_db_conexao()
     produtos_count = conn.execute("SELECT COUNT(*) FROM produtos").fetchone()[0]
