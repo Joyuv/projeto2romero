@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block titulo %}Produtos{% endblock %} {% block
+titulo_header %}Produtos{% endblock %} {% block main %}
+<div id="produtos" class="card-group">
+  {% for produto in produtos %}
+  <div class="card">
+    <div class="card-header"></div>
+    <div class="card-body">
+      <h5 class="card-title">{{ produto.nome }}</h5>
+      <p class="card-text">{{ produto.descricao }}</p>
+      <a href="#" class="btn btn-primary">Acessar</a>
+    </div>
+    <div class="card-footer text-muted">{{ produto.preco }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
