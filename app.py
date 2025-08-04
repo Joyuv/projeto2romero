@@ -138,14 +138,6 @@ def logout():
         return redirect(url_for("index"))
 
 
-@app.route("/produtos")
-def produtos_page():
-    conn = get_db_conexao()
-    produtos = conn.execute("SELECT * FROM produtos").fetchall()
-    conn.close()
-    return render_template("produtos.html", produtos=produtos)
-
-
 def produtos_populares():
     conn = get_db_conexao()
     produtos_count = conn.execute("SELECT COUNT(*) FROM produtos").fetchone()[0]
@@ -210,6 +202,20 @@ def remover_produto():
     conn.commit()
     conn.close()
     return redirect(url_for("dashboard"))
+
+
+@app.route("/produtos")
+def produtos():
+    conn = get_db_conexao()
+    cursor = conn.cursor()
+    if current_user.is_authenticated:
+        produtos = cursor.execute(
+            "SELECT * FROM produtos WHERE usuario_id != ? ", (current_user.id,)
+        ).fetchall()
+    else:
+        produtos = cursor.execute("SELECT * FROM produtos").fetchall()
+    conn.close()
+    return render_template("produtos.html", produtos=produtos)
 
 
 if __name__ == "__main__":
