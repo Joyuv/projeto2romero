@@ -10,3 +10,5 @@
 - O usuário deve ser capaz de se interessar por produtos postados, fazendo uma oferta
 - O usuário deve ser capaz de analisar interesses de outros usuários e negar ou conceder
 - O sistema deve notificar o usuário quando seu pedido for negado ou aceito, e, se aceito gerar um qrcode e um id aleatório para pagamento via pix
+
+## [Como contribuir](https://github.com/Joyuv/projeto2romero/blob/main/CONTRIBUTING.md)
