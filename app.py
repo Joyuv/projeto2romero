@@ -180,7 +180,7 @@ def produtos_populares():
     conn.close()
 
     return render_template("produtos.html")
-#teste de pr
+
 
 @app.route("/produtos/editar", methods=["POST", "GET"])
 @login_required
