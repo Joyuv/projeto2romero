@@ -4,6 +4,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from models import User, get_db_conexao
 import os
 
+try:
+    with open('database.db', 'r'):
+        print('Banco já existe')
+except:
+    with open('schema.sql', 'r') as f:
+        conn = get_db_conexao()
+        conn.executescript(f.read())
+        conn.commit()
+        conn.close()
+
 
 app = Flask(__name__)
 

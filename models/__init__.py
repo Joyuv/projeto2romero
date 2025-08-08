@@ -24,9 +24,7 @@ class User(UserMixin):
 
 
 def get_db_conexao():
-    db_path = os.path.join(current_app.root_path, "database.db")
-    print(f"Conectando ao banco em: {db_path}")
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect('database.db')
     conn.row_factory = sqlite3.Row
     return conn
 
