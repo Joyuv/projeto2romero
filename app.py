@@ -5,10 +5,10 @@ from models import User, get_db_conexao
 import os
 
 try:
-    with open('database.db', 'r'):
-        print('Banco já existe')
+    with open("database.db", "r"):
+        print("Banco já existe")
 except:
-    with open('schema.sql', 'r') as f:
+    with open("schema.sql", "r") as f:
         conn = get_db_conexao()
         conn.executescript(f.read())
         conn.commit()
@@ -32,9 +32,7 @@ def load_user(user_id):
     conn.close()
     if user_data is None:
         return None
-    return User(
-        user_data["id"], user_data["nome_usuario"], user_data["senha"]
-    )
+    return User(user_data["id"], user_data["nome_usuario"], user_data["senha"])
 
 
 # -- Rotas da aplicação --
@@ -95,9 +93,7 @@ def login():
 
         print(user_data)
         if user_data and check_password_hash(user_data["senha"], senha_usuario):
-            user = User(
-                user_data["id"], user_data["nome_usuario"], user_data["senha"]
-            )
+            user = User(user_data["id"], user_data["nome_usuario"], user_data["senha"])
             login_user(user)
             flash("Login realizado com sucesso", "success")
             # reedirecionamento para o dashboard
@@ -112,7 +108,7 @@ def login():
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if request.method == "POST":
-        email_usuario = request.form['email_usuario']
+        email_usuario = request.form["email_usuario"]
         nome_usuario = request.form["nome_usuario"]
         senha_usuario = request.form["senha_usuario"]
 
