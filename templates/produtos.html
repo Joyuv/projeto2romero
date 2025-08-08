@@ -3,7 +3,7 @@ titulo_header %}Produtos{% endblock %} {% block main %}
 <div id="produtos" class="card-group">
   {% for produto in produtos %}
   <div class="card">
-    <div class="card-header"></div>
+    <img src="{{ url_for('imagem', filename=produto.imagem.split('/')[-1]) }}" class="card-img-top" alt="Imagem do produto">
     <div class="card-body">
       <h5 class="card-title">{{ produto.nome }}</h5>
       <p class="card-text">{{ produto.descricao }}</p>

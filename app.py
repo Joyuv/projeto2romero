@@ -2,6 +2,7 @@ from flask import *
 from flask_login import *
 from werkzeug.security import check_password_hash, generate_password_hash
 from models import User, get_db_conexao
+from werkzeug.utils import secure_filename
 import os
 
 try:
@@ -42,6 +43,10 @@ def load_user(user_id):
 # -- Rotas da aplicação --
 
 
+@app.route('/uploads/<filename>')
+def imagem(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
@@ -67,9 +72,9 @@ def adicionar_produto():
     imagem = request.files['image']
 
     if imagem:
-        filename = os.secure_filename(name)
-        ext = filename.rsplit('.', 1)[1].lower()
-        filename = f'{os.filename_base}.{ext}'
+        filename_base = secure_filename(name)
+        ext = imagem.filename.rsplit('.', 1)[1].lower()
+        filename = f'{filename_base}.{ext}'
 
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         imagem.save(image_path)
@@ -79,8 +84,8 @@ def adicionar_produto():
     conn = get_db_conexao()
     try:
         conn.execute(
-            "INSERT INTO produtos(usuario_id, nome, descricao, preco) VALUES (?, ?, ?, ?)",
-            (user_id, name, description, preco),
+            "INSERT INTO produtos(imagem, usuario_id, nome, descricao, preco) VALUES (?, ?, ?, ?, ?)",
+            (filename, user_id, name, description, preco),
         )
     except:
         print("Erro ao adicionar")
