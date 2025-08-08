@@ -1,17 +1,27 @@
-name: Adicionar label bugfix no pr
+name: Label Pull Requests
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  pull-requests: write
 
 jobs:
-  add-bugfix-label:
+  label:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
-      - name: Checar se o pr referencia uma issue
-        uses: actions/github-script@v7
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          sync-labels: false
+          dot: true
+
+  bugfix:
+    needs: label  # ← garante que o labeler rode antes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
         with:
           script: |
             const prBody = context.payload.pull_request.body || "";
