@@ -6,6 +6,10 @@ import os
 
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+app.config['MAX_CONTENT_LENGHT'] = 4 * 1024 * 1024
+
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 login_manager = LoginManager()
 app.secret_key = "guilherme"
@@ -52,6 +56,16 @@ def adicionar_produto():
     name = request.form.get("name")
     description = request.form.get("description")
     preco = request.form.get("preco")
+    imagem = request.files['image']
+
+    if imagem:
+        filename = os.secure_filename(name)
+        ext = filename.rsplit('.', 1)[1].lower()
+        filename = f'{os.filename_base}.{ext}'
+
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        imagem.save(image_path)
+    
     user_id = current_user.id
     print(user_id)
     conn = get_db_conexao()

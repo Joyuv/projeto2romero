@@ -56,7 +56,11 @@
         <div class="tab-pane fade" id="cadastrar" role="tabpanel" aria-labelledby="cadastrar-tab">
             <h3 class="mt-4 mb-3">Cadastrar Novo Produto</h3>
             <!-- Formulário para o usuário adicionar um novo produto -->
-            <form action="{{ url_for('adicionar_produto') }}" method="POST">
+            <form action="{{ url_for('adicionar_produto') }}" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="product_image" class="form-label">Imagem do produto</label>
+                    <input type="file" class="form-control" id="product_image" name="image" accept="image/*" required>
+                </div>
                 <div class="mb-3">
                     <label for="product_name" class="form-label">Nome do Produto</label>
                     <input type="text" class="form-control" id="product_name" name="name" required>

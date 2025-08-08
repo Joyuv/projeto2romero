@@ -208,3 +208,6 @@ __marimo__/
 
 # SQL database
 *.db
+
+#uploads
+uploads/
