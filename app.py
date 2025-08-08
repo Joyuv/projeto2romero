@@ -113,7 +113,7 @@ def login():
             user = User(user_data["id"], user_data["nome_usuario"], user_data["senha"])
             login_user(user)
             flash("Login realizado com sucesso", "success")
-            # reedirecionamento para o dashboard
+            # reedirecionamento para o dashboard teste
             return redirect(url_for("dashboard"))
         else:
             print("erro")
