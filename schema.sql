@@ -15,6 +15,7 @@ CREATE TABLE produtos (
     nome TEXT NOT NULL,
     descricao TEXT,
     preco REAL NOT NULL,
+    imagem TEXT,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 

@@ -2,6 +2,7 @@ from flask import *
 from flask_login import *
 from werkzeug.security import check_password_hash, generate_password_hash
 from models import User, get_db_conexao
+from werkzeug.utils import secure_filename
 import os
 
 try:
@@ -16,6 +17,10 @@ except:
 
 
 app = Flask(__name__)
+app.config["UPLOAD_FOLDER"] = "uploads/"
+app.config["MAX_CONTENT_LENGHT"] = 4 * 1024 * 1024
+
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 login_manager = LoginManager()
 app.secret_key = "guilherme"
@@ -36,6 +41,11 @@ def load_user(user_id):
 
 
 # -- Rotas da aplicação --
+
+
+@app.route("/uploads/<filename>")
+def imagem(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
 @app.route("/", methods=["GET"])
@@ -60,13 +70,22 @@ def adicionar_produto():
     name = request.form.get("name")
     description = request.form.get("description")
     preco = request.form.get("preco")
+    imagem = request.files["image"]
+
+    if imagem:
+        filename_base = secure_filename(name)
+        ext = imagem.filename.rsplit(".", 1)[1].lower()
+        filename = f"{filename_base}.{ext}"
+
+        image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        imagem.save(image_path)
+
     user_id = current_user.id
-    print(user_id)
     conn = get_db_conexao()
     try:
         conn.execute(
-            "INSERT INTO produtos(usuario_id, nome, descricao, preco) VALUES (?, ?, ?, ?)",
-            (user_id, name, description, preco),
+            "INSERT INTO produtos(imagem, usuario_id, nome, descricao, preco) VALUES (?, ?, ?, ?, ?)",
+            (filename, user_id, name, description, preco),
         )
     except:
         print("Erro ao adicionar")
@@ -84,14 +103,12 @@ def login():
     if request.method == "POST":
         email_usuario = request.form.get("email_usuario")
         senha_usuario = request.form.get("senha_usuario")
-        print(email_usuario, senha_usuario)
         conn = get_db_conexao()
         user_data = conn.execute(
             "SELECT * FROM usuarios WHERE email = ?", (email_usuario,)
         ).fetchone()
         conn.close()
 
-        print(user_data)
         if user_data and check_password_hash(user_data["senha"], senha_usuario):
             user = User(user_data["id"], user_data["nome_usuario"], user_data["senha"])
             login_user(user)
@@ -173,8 +190,6 @@ def editar_produto():
         descricao = request.form.get("description")
         preco = request.form.get("preco")
         id = request.form.get("id")
-
-        print(nome, descricao, preco, id)
 
         conn = get_db_conexao()
         cursor = conn.cursor()
