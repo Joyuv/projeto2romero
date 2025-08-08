@@ -14,12 +14,12 @@ class User(UserMixin):
     def get(cls, user_id):
         conn = get_db_conexao()
         user_data = conn.execute(
-            "SELECT nome_usuario, senha FROM usuarios WHERE nome_usuario = ?",
+            "SELECT id, senha FROM usuarios WHERE email = ?",
             (user_id,),
         ).fetchone()
         conn.close()
         if user_data:
-            return cls(user_data["nome_usuario"], user_data["senha"])
+            return cls(user_data["id"], user_data["senha"])
         return None
 
 

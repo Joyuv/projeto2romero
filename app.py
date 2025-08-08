@@ -27,13 +27,13 @@ login_manager.login_view = "index"
 def load_user(user_id):
     conn = get_db_conexao()
     user_data = conn.execute(
-        "SELECT nome_usuario, senha FROM usuarios WHERE nome_usuario = ?", (user_id,)
+        "SELECT * FROM usuarios WHERE id = ?", (user_id,)
     ).fetchone()
     conn.close()
     if user_data is None:
         return None
     return User(
-        user_data["nome_usuario"], user_data["nome_usuario"], user_data["senha"]
+        user_data["id"], user_data["nome_usuario"], user_data["senha"]
     )
 
 
@@ -84,19 +84,19 @@ def login():
         return redirect(url_for("dashboard"))
 
     if request.method == "POST":
-        nome_usuario = request.form.get("nome_usuario")
+        email_usuario = request.form.get("email_usuario")
         senha_usuario = request.form.get("senha_usuario")
-        print(f"{nome_usuario}, {senha_usuario}")
+        print(email_usuario, senha_usuario)
         conn = get_db_conexao()
         user_data = conn.execute(
-            "SELECT * FROM usuarios WHERE nome_usuario = ?", (nome_usuario,)
+            "SELECT * FROM usuarios WHERE email = ?", (email_usuario,)
         ).fetchone()
         conn.close()
 
         print(user_data)
         if user_data and check_password_hash(user_data["senha"], senha_usuario):
             user = User(
-                user_data["nome_usuario"], user_data["nome_usuario"], user_data["senha"]
+                user_data["id"], user_data["nome_usuario"], user_data["senha"]
             )
             login_user(user)
             flash("Login realizado com sucesso", "success")
@@ -112,10 +112,11 @@ def login():
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if request.method == "POST":
+        email_usuario = request.form['email_usuario']
         nome_usuario = request.form["nome_usuario"]
         senha_usuario = request.form["senha_usuario"]
 
-        if not nome_usuario or not senha_usuario:
+        if not nome_usuario or not senha_usuario or not email_usuario:
             flash("Preencha todos os campos", "error")
             return redirect(url_for("cadastro"))
 
@@ -123,8 +124,8 @@ def cadastro():
         conn = get_db_conexao()
         try:
             conn.execute(
-                "INSERT INTO usuarios (nome_usuario, senha) VALUES (?, ?)",
-                (nome_usuario, senha_hash),
+                "INSERT INTO usuarios (email, nome_usuario, senha) VALUES (?, ?, ?)",
+                (email_usuario, nome_usuario, senha_hash),
             )
             conn.commit()
         except conn.IntegrityError:

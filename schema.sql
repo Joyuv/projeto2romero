@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS trocas;
 
 CREATE TABLE usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_usuario TEXT UNIQUE NOT NULL,
+    nome_usuario TEXT NOT NULL,
     senha TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE
 );
