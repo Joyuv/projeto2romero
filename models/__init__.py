@@ -14,19 +14,17 @@ class User(UserMixin):
     def get(cls, user_id):
         conn = get_db_conexao()
         user_data = conn.execute(
-            "SELECT nome_usuario, senha FROM usuarios WHERE nome_usuario = ?",
+            "SELECT id, senha FROM usuarios WHERE email = ?",
             (user_id,),
         ).fetchone()
         conn.close()
         if user_data:
-            return cls(user_data["nome_usuario"], user_data["senha"])
+            return cls(user_data["id"], user_data["senha"])
         return None
 
 
 def get_db_conexao():
-    db_path = os.path.join(current_app.root_path, "database.db")
-    print(f"Conectando ao banco em: {db_path}")
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
 
