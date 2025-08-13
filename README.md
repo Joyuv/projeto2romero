@@ -1,5 +1,27 @@
 # Projeto Mercado de Troca
 
+## Dependências python
+
+- black 25.1.0
+- blinker 1.9.0
+- click 8.2.1
+- colorama 0.4.6
+- flake8 7.3.0
+- Flask 3.1.1
+- Flask-Login 0.6.3
+- itsdangerous 2.2.0
+- Jinja2 3.1.6
+- MarkupSafe 3.0.2
+- mccabe 0.7.0
+- mypy_extension 1.1.0
+- packaging 25.0
+- pathspec 0.12.1
+- platformdirs 4.3.8
+- pycodestyle 2.14.0
+- pyflakes 3.4.0
+- Werkzeug 3.1.3
+
+
 ## Como rodar
 
 1. Clone esse repositório `git clone https://github.com/Joyuv/projeto2romero`
